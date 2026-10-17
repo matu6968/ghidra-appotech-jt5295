@@ -1,0 +1,4 @@
+# Verified JT5295 subset: little-endian instructions/data, no branch delay,
+# call link PC+4. Peripheral SPR meanings remain subject to investigation.
+@define JT5295_NODELAY "1"
+@include "OpenRISC_LE.slaspec"

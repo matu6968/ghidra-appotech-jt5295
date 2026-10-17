@@ -89,7 +89,7 @@ mD: offset(rA) is rA & imm16a & imm16b [ offset = imm16a << 11 | imm16b; ] {
 	export ea;
 }
 
-mN: ea is imm26 [ ea = (imm26 << 2) + inst_start; ] {
+mN: ea is imm26 [ ea = ((imm26 << 2) + inst_start) & 0xffffffff; ] {
 	export *:4 ea;
 }
 
@@ -107,13 +107,19 @@ sprD: ea is uimm16a & uimm16b [ ea = uimm16a << 11 | uimm16b; ] {
 # Instructions
 #
 :l.j mN is opcode = 0x0 & mN {
+@ifndef JT5295_NODELAY
 	delayslot(1);
+@endif
 	goto mN;
 }
 
 :l.jal mN is opcode = 0x1 & mN {
+@ifdef JT5295_NODELAY
+	r9 = inst_next;
+@else
 	r9 = inst_next + 4;
 	delayslot(1);
+@endif
 	call mN;
 }
 
@@ -123,13 +129,17 @@ sprD: ea is uimm16a & uimm16b [ ea = uimm16a << 11 | uimm16b; ] {
 
 :l.bnf mN is opcode = 0x3 & mN {
 	local flag = F;
+@ifndef JT5295_NODELAY
 	delayslot(1);
+@endif
 	if (!flag) goto mN;
 }
 
 :l.bf mN is opcode = 0x4 & mN {
 	local flag = F;
+@ifndef JT5295_NODELAY
 	delayslot(1);
+@endif
 	if (flag) goto mN;
 }
 
@@ -173,20 +183,28 @@ with : opcode = 0x8 {
 
 :l.jr rB is opcode = 0x11 & rB {
 	local ea = rB;
+@ifndef JT5295_NODELAY
 	delayslot(1);
+@endif
 	goto [ea];
 }
 
 :l.jr rB is opcode = 0x11 & rB & rB = 0x9 {
 	local ea = rB;
+@ifndef JT5295_NODELAY
 	delayslot(1);
+@endif
 	return [ea];
 }
 
 :l.jalr rB is opcode = 0x12 & rB {
 	local ea = rB;
+@ifdef JT5295_NODELAY
+	r9 = inst_next;
+@else
 	r9 = inst_next + 4;
 	delayslot(1);
+@endif
 	call [ea];
 }
 

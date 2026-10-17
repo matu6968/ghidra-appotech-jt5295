@@ -12,4 +12,21 @@
     <description>OpenRISC 1000 ORBIS32 BE</description>
     <compiler name="default" spec="OpenRISC.cspec" id="default" />
   </language>
+  <language processor="OpenRISC"
+            endian="little"
+            size="32"
+            variant="default"
+            version="1.0"
+            slafile="OpenRISC_LE.sla"
+            processorspec="OpenRISC.pspec"
+            id="OpenRISC:LE:32:default">
+    <description>OpenRISC 1000 ORBIS32 LE (AppoTech firmware word order)</description>
+    <compiler name="default" spec="OpenRISC.cspec" id="default" />
+  </language>
+  <language processor="OpenRISC" endian="little" size="32"
+            variant="JT5295" version="1.0" slafile="OpenRISC_JT5295.sla"
+            processorspec="OpenRISC.pspec" id="OpenRISC:LE:32:JT5295">
+    <description>AppoTech JT5295: little endian, no delay slots, PC+4 link</description>
+    <compiler name="SDK GCC 16" spec="OpenRISC_JT5295.cspec" id="gcc" />
+  </language>
 </language_definitions>
